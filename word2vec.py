@@ -173,7 +173,7 @@ def word2vec_sgd_wrapper(word2vecModel, word2Ind, wordVectors, dataset,
     N = wordVectors.shape[0]
     centerWordVectors = wordVectors[:int(N/2),:]
     outsideVectors = wordVectors[int(N/2):,:]
-    for i in range(batchsize):
+    for _ in range(batchsize):
         windowSize1 = random.randint(1, windowSize)
         centerWord, context = dataset.getRandomContext(windowSize1)
 

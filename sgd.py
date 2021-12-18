@@ -20,15 +20,14 @@ def load_saved_params():
         if (iter > st):
             st = iter
 
-    if st > 0:
-        params_file = "saved_params_%d.npy" % st
-        state_file = "saved_state_%d.pickle" % st
-        params = np.load(params_file)
-        with open(state_file, "rb") as f:
-            state = pickle.load(f)
-        return st, params, state
-    else:
+    if st <= 0:
         return st, None, None
+    params_file = "saved_params_%d.npy" % st
+    state_file = "saved_state_%d.pickle" % st
+    params = np.load(params_file)
+    with open(state_file, "rb") as f:
+        state = pickle.load(f)
+    return st, params, state
 
 
 def save_params(iter, params):
@@ -81,20 +80,17 @@ def sgd(f, x0, step, iterations, postprocessing=None, useSaved=False,
 
     exploss = None
 
-    for iter in range(start_iter + 1, iterations + 1):
-        # You might want to print the progress every few iterations.
+    # You might want to print the progress every few iterations.
 
-        loss = None
+    loss = None
+    for iter in range(start_iter + 1, iterations + 1):
         ### YOUR CODE HERE (~2 lines)
 
         ### END YOUR CODE
 
         x = postprocessing(x)
         if iter % PRINT_EVERY == 0:
-            if not exploss:
-                exploss = loss
-            else:
-                exploss = .95 * exploss + .05 * loss
+            exploss = loss if not exploss else .95 * exploss + .05 * loss
             print("iter %d: %f" % (iter, exploss))
 
         if iter % SAVE_PARAMS_EVERY == 0 and useSaved:
